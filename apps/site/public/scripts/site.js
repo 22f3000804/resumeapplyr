@@ -1,26 +1,19 @@
-/* Volley — page behaviour.
+/* resumeapplyr — page behaviour.
  *
- * The canvas file drove its copy from a DCLogic renderVals() block with four
- * props (ctaLabel, signupCount, showSocialProof, showStats). Those become the
- * CONFIG object below, and the page is rendered from it at load. The HTML also
- * carries the same defaults inline, so everything reads correctly with
- * JavaScript disabled — this only keeps the numbers in one place.
+ * The canvas file drove its copy from a DCLogic renderVals() block. What is left of it lives in
+ * CONFIG below. The HTML carries the same text inline, so the page reads correctly with
+ * JavaScript disabled — this only keeps the label in one place and wires the forms.
  */
 (function () {
   'use strict';
 
   var CONFIG = {
     ctaLabel: 'Get my free CV',
-    signupCount: 1284,
-    showSocialProof: true,
 
-    // POST { email } here on signup. Left null until the backend exists, in
-    // which case the form resolves locally and says so.
-    signupEndpoint: null,
+    // Same-origin Pages Function (functions/api/signup.js) that stores the address in D1.
+    signupEndpoint: '/api/signup',
 
-    scrapedCount: 1204,
-    // Rows for the hero-ticker direction. Wire to the live scrape feed later;
-    // the shape is what the design showed.
+    // Rows for the hero-ticker preview. Sample data, and the panel says so.
     ticker: [
       { score: 94, tone: 'accent',  title: 'Senior Product Designer — Platform', meta: 'Kraftwerk Labs · Berlin · Greenhouse' },
       { score: 91, tone: 'accent',  title: 'Product Designer, Growth',           meta: 'Halden · Remote EU · Wellfound' },
@@ -32,27 +25,24 @@
     ]
   };
 
+  var MESSAGES = {
+    invalid: 'That doesn’t look like an email address yet.',
+    pending: 'Sending…',
+    closed: 'Signups aren’t switched on yet. Please try again soon.',
+    failed: 'We couldn’t save that address. Try again in a moment.',
+    offline: 'We couldn’t reach the server. Check your connection and try again.'
+  };
+
   var TONE = {
     accent: 'var(--color-accent)',
     deep: 'var(--color-accent-700)',
     neutral: 'var(--color-neutral-700)'
   };
 
-  var fmt = function (n) { return n.toLocaleString('en-US'); };
-
   // ── copy driven by the config ──────────────────────────────────────────
 
   function renderCopy() {
-    var signups = fmt(CONFIG.signupCount);
-
     each('[data-cta-label]', function (el) { el.textContent = CONFIG.ctaLabel; });
-    each('[data-signups]', function (el) { el.textContent = signups; });
-    each('[data-scraped]', function (el) { el.textContent = fmt(CONFIG.scrapedCount); });
-
-    var note = CONFIG.showSocialProof
-      ? signups + ' people have one already. No card, no catch — we’re validating this.'
-      : 'No card, no catch. Takes about nine minutes.';
-    each('[data-signup-note]', function (el) { el.textContent = note; });
   }
 
   // ── signup forms ───────────────────────────────────────────────────────
@@ -70,42 +60,49 @@
 
   function submit(form) {
     var input = form.querySelector('input[type="email"]');
+    var trap = form.querySelector('input[name="website"]');
     var button = form.querySelector('button[type="submit"]');
     var email = (input.value || '').trim();
 
     if (!EMAIL.test(email)) {
       input.setAttribute('aria-invalid', 'true');
-      say(form, 'error', 'That doesn’t look like an email address yet.');
+      say(form, 'error', MESSAGES.invalid);
       input.focus();
       return;
     }
     input.removeAttribute('aria-invalid');
 
     button.disabled = true;
-    say(form, 'pending', 'Sending…');
+    say(form, 'pending', MESSAGES.pending);
 
-    send(email)
+    send({
+      email: email,
+      source: form.getAttribute('data-source') || 'page',
+      website: trap ? trap.value : ''
+    })
       .then(function () {
         form.hidden = true;
-        say(form, 'ok', 'Check ' + email + ' — your CV brief is on its way.');
+        say(form, 'ok', 'You’re on the list. We’ll email ' + email + ' to start your free CV.');
       })
       .catch(function (err) {
         button.disabled = false;
-        say(form, 'error', err && err.message ? err.message : 'Something went wrong. Try again in a moment.');
+        say(form, 'error', err && err.message ? err.message : MESSAGES.failed);
       });
   }
 
-  function send(email) {
-    if (!CONFIG.signupEndpoint) {
-      // No backend wired yet: resolve locally rather than pretend to store it.
-      return new Promise(function (resolve) { setTimeout(resolve, 350); });
-    }
+  // Every rejection carries one of MESSAGES, never the browser's own error text.
+  function send(body) {
     return fetch(CONFIG.signupEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email })
+      body: JSON.stringify(body)
     }).then(function (res) {
-      if (!res.ok) throw new Error('We couldn’t save that address. Try again in a moment.');
+      if (res.ok) return;
+      if (res.status === 400) throw new Error(MESSAGES.invalid);
+      if (res.status === 503) throw new Error(MESSAGES.closed);
+      throw new Error(MESSAGES.failed);
+    }, function () {
+      throw new Error(MESSAGES.offline);
     });
   }
 
@@ -118,7 +115,7 @@
     status.textContent = message;
   }
 
-  // ── scrape ticker (hero direction B) ───────────────────────────────────
+  // ── sample ticker (hero direction B) ───────────────────────────────────
 
   function renderTicker() {
     var list = document.querySelector('[data-ticker]');
@@ -157,23 +154,20 @@
     return li;
   }
 
-  // The hero is captioned "scraped in the last hour", so the feed moves: a row
-  // rotates in at the top every few seconds and the oldest drops off. Paused
-  // when the tab is hidden or the visitor asked for reduced motion.
+  // The design shows a moving feed, so the sample rows rotate: one comes in at the top every few
+  // seconds and the oldest drops off. Paused when the tab is hidden or the visitor asked for
+  // reduced motion. Nothing is counted — the rows are samples.
   function startFeed(list) {
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (reduced.matches) return;
 
     var queue = CONFIG.ticker.slice();
-    var counter = document.querySelector('[data-scraped]');
-    var scraped = CONFIG.scrapedCount;
 
     setInterval(function () {
-      if (document.hidden) return;
+      if (document.hidden || reduced.matches) return;
 
-      // Take from the end: the row about to scroll off is the one that comes
-      // back in at the top, so the feed rotates without ever showing a
-      // posting twice at once.
+      // Take from the end: the row about to scroll off is the one that comes back in at the top,
+      // so the feed rotates without ever showing a posting twice at once.
       var next = queue.pop();
       queue.unshift(next);
 
@@ -183,8 +177,6 @@
       if (list.children.length > CONFIG.ticker.length) {
         list.removeChild(list.lastChild);
       }
-
-      if (counter) counter.textContent = fmt(++scraped);
     }, 4200);
   }
 

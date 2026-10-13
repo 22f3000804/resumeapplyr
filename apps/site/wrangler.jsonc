@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "resumeapplyr",
+  // Only this folder is uploaded. Anything outside public/ (docs, notes, local files) stays private.
+  "pages_build_output_dir": "public",
+  "compatibility_date": "2026-08-20"
+
+  // Signups need a D1 database. Create it once, paste its id below, uncomment, then deploy
+  // (full steps in docs/deploy.md):
+  //   npx wrangler d1 create resumeapplyr-signups
+  //   npx wrangler d1 migrations apply resumeapplyr-signups --remote
+  // Until then /api/signup answers 503 and the form says signups aren't switched on yet.
+  //
+  // ,"d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "resumeapplyr-signups",
+  //     "database_id": "<paste the id from `wrangler d1 create`>",
+  //     "migrations_dir": "migrations"
+  //   }
+  // ]
+}

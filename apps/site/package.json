@@ -1,0 +1,17 @@
+{
+  "name": "@resumeapplyr/site",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "resumeapplyr landing page: static HTML/CSS on Cloudflare Pages, plus one Pages Function for signups.",
+  "scripts": {
+    "serve": "node tests/server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:e2e": "node tests/e2e.mjs",
+    "deploy": "npx wrangler@4 pages deploy"
+  },
+  "devDependencies": {
+    "axe-core": "4.10.2",
+    "playwright": "1.56.1"
+  }
+}

@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Volley — hero direction B (live scrape ticker)</title>
+<title>resumeapplyr — hero direction B (live scrape ticker)</title>
 <meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="styles/modernist.css">
 <link rel="stylesheet" href="styles/site.css">
 <script src="scripts/site.js" defer></script>
@@ -27,7 +28,7 @@
 
   <header>
     <nav class="nav site-nav" aria-label="Primary">
-      <span class="nav-brand">Volley</span>
+      <span class="nav-brand">resumeapplyr</span>
       <a class="nav-link" href="index.html#free-cv">Free CV</a>
       <a class="nav-link" href="index.html#how-it-works">How it works</a>
       <a class="btn btn-primary" href="#signup-email-ticker"><span data-cta-label>Get my free CV</span></a>
@@ -39,28 +40,30 @@
 
       <div class="hero-copy">
         <h1 class="hero-title optical" id="hero-title">
-          <span>We read every job</span>
-          <span>posted today.</span>
-          <span class="accent">You get a CV for each.</span>
+          <span>We read the boards</span>
+          <span>you pick.</span>
+          <span class="accent">You get a CV for each job.</span>
         </h1>
         <p class="lead">Sign up now and the first one is free, written by AI from your history and yours to keep — whether or not you ever let us send it anywhere.</p>
 
-        <form class="signup" novalidate>
+        <form class="signup" data-source="ticker" novalidate>
           <label class="sr-only" for="signup-email-ticker">Email address</label>
           <input class="input" id="signup-email-ticker" name="email" type="email" inputmode="email"
                  autocomplete="email" placeholder="you@email.com" required>
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="btn btn-primary" type="submit"><span data-cta-label>Get my free CV</span></button>
         </form>
-        <p class="signup-note" data-signup-note>1,284 people have one already. No card, no catch — we’re validating this.</p>
+        <p class="signup-note">No card, no catch — we’re validating this. <a href="privacy.html">How we use your email</a>.</p>
         <p class="signup-status" role="status" hidden></p>
       </div>
 
       <!-- Rows come from CONFIG.ticker in scripts/site.js; data-ticker-live rotates
-           them in, and the rotation is skipped under prefers-reduced-motion. -->
-      <aside class="ticker" aria-label="Recently scraped postings">
+           them in, and the rotation is skipped under prefers-reduced-motion. They are
+           sample postings, and the panel says so. -->
+      <section class="ticker" aria-label="Sample postings">
         <div class="ticker-head">
-          <span class="kicker">Scraped in the last hour</span>
-          <span class="ticker-count tnum" data-scraped>1,204</span>
+          <span class="kicker">Sample feed</span>
+          <span class="ticker-count">Example data</span>
         </div>
         <ul class="ticker-list" data-ticker data-ticker-live>
           <li class="ticker-row">
@@ -113,8 +116,8 @@
             </div>
           </li>
         </ul>
-        <p class="ticker-foot">Scores are against a sample profile. Yours will differ.</p>
-      </aside>
+        <p class="ticker-foot">Sample postings, scored against a sample profile. Yours will differ.</p>
+      </section>
 
     </section>
     <hr class="rule">

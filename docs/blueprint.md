@@ -1,5 +1,11 @@
 # JobApplyer — Problem Statement & Technical Blueprint
 
+> **Note (13 Oct 2026):** the product is now called **resumeapplyr**. The first build is the
+> desktop app in `apps/desktop` ([docs/desktop.md](desktop.md)), which runs the agent on the user's
+> own computer as proposed in the review notes below. Those notes used to sit in table cells that
+> GitHub doesn't render; they now appear as quoted notes under each section. This document was
+> previously `22f3001562.md` at the repo root.
+
 ---
 
 ## 1. Problem Statement
@@ -35,8 +41,8 @@ An end-to-end, AI-powered platform that:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        USER (Browser)                               │         //Rowan- i propose building it out as an electron web app, gives us control over all kinds of data the website
-│                   Next.js Frontend (Dashboard)                      │                   will be collecting for anti bot activity. Along with more flexibility on  anti anti-bot system.
+│                        USER (Browser)                               │
+│                   Next.js Frontend (Dashboard)                      │
 └──────────────────────────┬──────────────────────────────────────────┘
                            │ REST / WebSocket
                            ▼
@@ -59,6 +65,8 @@ An end-to-end, AI-powered platform that:
   └─────────────────────────────────────────────────────────────┘
 ```
 
+> **Rowan:** i propose building it out as an electron web app, gives us control over all kinds of data the website will be collecting for anti bot activity. Along with more flexibility on  anti anti-bot system.
+
 ---
 
 ## 3. Feature Breakdown
@@ -69,12 +77,14 @@ An end-to-end, AI-powered platform that:
 
 | Feature | Description |
 |---------|-------------|
-| Multi-source scraping | Indeed, LinkedIn, Naukri, Glassdoor, Google Jobs API, company career pages | //Rowan - For websites that arent listed here (which are populat in other countries)   we will need a smart scraping solution where the ai agent analyzes the website and builds out a custom scraper in case our scraper isnt cutting it since we cant get personally involved for every building a scraper for every website. 
+| Multi-source scraping | Indeed, LinkedIn, Naukri, Glassdoor, Google Jobs API, company career pages |
 | Intelligent deduplication | Match jobs across sources by `(company, title, location)` hash |
 | Real-time normalization | Standardize salary ranges, experience levels, job types, locations |
 | Smart search & filters | Full-text search with filters: role, location, salary, remote, experience |
 | Job match scoring | AI-powered matching: compare JD against user's resume/profile → fit % |
 | Scheduled pipelines | Cron-based scraping with configurable frequency per source |
+
+> **Rowan, on "Multi-source scraping":** For websites that arent listed here (which are populat in other countries)   we will need a smart scraping solution where the ai agent analyzes the website and builds out a custom scraper in case our scraper isnt cutting it since we cant get personally involved for every building a scraper for every website.
 
 **Existing Foundation**: The project already has `google_job.py` — a working scraper using the ScrapeBadger API for Google Jobs. This will be expanded into a multi-source scraping service.
 
@@ -114,9 +124,13 @@ An end-to-end, AI-powered platform that:
 | One-click apply | Auto-fill application forms using stored profile data |
 | Cover letter generation | AI-generated cover letters tailored to each specific JD |
 | Screening question answers | AI-suggested answers to common screening questions |
-| Human-in-the-loop review | **User reviews and confirms every application before submission** | //Rowan - That or it can be fully automated once the user trusts it more. 
+| Human-in-the-loop review | **User reviews and confirms every application before submission** |
 | Rate limiting | Max applications per day to avoid bot detection and spam |
-| Anti-detection measures | Randomized delays, proxy rotation, human-like browser fingerprints | //Rowan - proxy rotation wont be needed since the application since itll be running in the users machine. in a month theyll be applying anyhwere between 1500-3000 resumes, which is roughly 2-4 resumes per hour, which is perfectly within human limits. so ip reputation is safe.
+| Anti-detection measures | Randomized delays, proxy rotation, human-like browser fingerprints |
+
+> **Rowan, on "Human-in-the-loop review":** That or it can be fully automated once the user trusts it more.
+>
+> **Rowan, on "Anti-detection measures":** proxy rotation wont be needed since the application since itll be running in the users machine. in a month theyll be applying anyhwere between 1500-3000 resumes, which is roughly 2-4 resumes per hour, which is perfectly within human limits. so ip reputation is safe.
 
 > **Design Principle**: The system assists — it does NOT blindly spray applications. Every submission requires explicit user approval. This is both an ethical requirement and a practical one (mass-blasting destroys your reputation with recruiters).
 
@@ -306,12 +320,16 @@ An end-to-end, AI-powered platform that:
 
 | Metric | Target |
 |--------|--------|
-| Time per application | < 3 minutes (vs. industry avg of 45 min) | //Rowan - shouldnt be applying more than 2-4 (depends on the tier the user is on)
+| Time per application | < 3 minutes (vs. industry avg of 45 min) |
 | ATS pass-through rate | > 85% (vs. industry avg of 25%) |
 | Job-resume match accuracy | > 80% correlation with interview callbacks |
-| User applications per session | 10–20 quality applications in under 1 hour | //Rowan - too much
+| User applications per session | 10–20 quality applications in under 1 hour |
 | System uptime | > 99.5% |
 | User satisfaction (NPS) | > 50 |
+
+> **Rowan, on "Time per application":** shouldnt be applying more than 2-4 (depends on the tier the user is on)
+>
+> **Rowan, on "User applications per session":** too much
 
 ---
 
