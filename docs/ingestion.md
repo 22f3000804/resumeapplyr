@@ -106,7 +106,7 @@ the CFAA, not about copyright or breach of contract.
 
 ```mermaid
 flowchart TB
-  CRON["Cron Worker<br/>every 5 min"] -->|"SELECT … WHERE next_due_at &lt;= now<br/>LIMIT 200"| Q[["Queue<br/>volley-ingest"]]
+  CRON["Cron Worker<br/>every 5 min"] -->|"SELECT … WHERE next_due_at &lt;= now<br/>LIMIT 200"| Q[["Queue<br/>resumeapplyr-ingest"]]
   Q --> C["Consumer Worker<br/>one source per message"]
   C -->|"conditional GET<br/>If-None-Match"| API["ATS endpoint"]
   API -->|"200"| N["normalize → content_hash"]
