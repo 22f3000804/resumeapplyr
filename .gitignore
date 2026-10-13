@@ -1,0 +1,20 @@
+# dependencies and build output
+node_modules/
+out/
+dist/
+release/
+coverage/
+test-results/
+playwright-report/
+.wrangler/
+
+# local environment and OS files
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.log
+
+# personal data that must never be committed (e.g. LinkedIn exports used for testing)
+Sample profile*/

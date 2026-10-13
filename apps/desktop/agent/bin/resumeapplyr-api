@@ -1,0 +1,6 @@
+#!/bin/sh
+dir=$(dirname "$0")
+
+# Git Bash would mangle /api/... into a Windows path; convert only our own script path.
+command -v cygpath >/dev/null 2>&1 && dir=$(cygpath -m "$dir")
+MSYS_NO_PATHCONV=1 exec node "$dir/api.mjs" "$@"

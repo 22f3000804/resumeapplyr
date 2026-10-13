@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site:
+    name: Website
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/site/package-lock.json
+      - run: npm ci
+      - name: Signup function tests
+        run: npm test
+      - run: npx playwright install --with-deps chromium
+      - name: Browser checks (copy, signup flow, accessibility)
+        run: npm run test:e2e
+
+  desktop:
+    name: Desktop app (Linux, end to end)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Unit and API tests
+        run: npm test
+      - name: End-to-end (Electron with a fake agent)
+        run: xvfb-run -a -s "-screen 0 1600x1000x24" npm run test:e2e
+        env:
+          E2E_SCREENSHOTS: ${{ github.workspace }}/e2e-screenshots
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-e2e-screenshots
+          path: ${{ github.workspace }}/e2e-screenshots
+          if-no-files-found: ignore
+
+  desktop-windows:
+    name: Desktop app (Windows)
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: apps/desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Tests that don't need a POSIX shell
+        run: npx vitest run tests/core tests/api tests/agent/executable.test.ts
+      - run: npm run build

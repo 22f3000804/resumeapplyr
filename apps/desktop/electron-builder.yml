@@ -1,0 +1,45 @@
+# Installers for the desktop app: `npm run dist` (or dist:win / dist:mac / dist:linux).
+# Builds are unsigned until signing certificates are added; see docs/desktop.md#releases.
+appId: com.resumeapplyr.desktop
+productName: resumeapplyr
+copyright: Copyright © 2026 resumeapplyr
+directories:
+  buildResources: build
+  output: release/${version}
+files:
+  - out/**
+  - package.json
+  - "!**/*.map"
+  - "!**/node_modules/**/{CHANGELOG.md,README.md,readme.md,*.d.ts}"
+# The agent plugin (skills, workers, the resumeapplyr-api CLI) runs from disk, outside the asar.
+extraResources:
+  - from: agent
+    to: agent
+  - from: ../../THIRD_PARTY_NOTICES.md
+    to: THIRD_PARTY_NOTICES.md
+# Playwright opens the sign-in browser with files it reads and spawns from disk.
+asarUnpack:
+  - node_modules/playwright-core/**
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  artifactName: ${productName}-Setup-${version}.${ext}
+linux:
+  executableName: resumeapplyr
+  syncDesktopName: true
+  category: Office
+  target: [AppImage, deb]
+  maintainer: resumeapplyr
+deb:
+  artifactName: resumeapplyr_${version}_${arch}.${ext}
+publish: null

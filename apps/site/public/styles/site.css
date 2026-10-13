@@ -1,0 +1,534 @@
+/* resumeapplyr — page styles.
+   Every value here comes from the Modernist tokens in modernist.css or from the
+   measurements on the mockup canvas (artboards 1a–1d, drawn at 1400px; the design
+   file still carries the product's old working name, see README.md).
+   The canvas is a fixed-width artboard, so the breakpoints below are the part of
+   the design that had to be decided here rather than read off the mockup. */
+
+/* ── page frame ────────────────────────────────────────────────────────── */
+
+:root {
+  --page-max: 1400px;
+  --page-pad: clamp(20px, 4.6vw, 64px);
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--color-neutral-300); text-wrap: pretty; }
+
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  background: var(--color-bg);
+}
+
+.wrap { padding-inline: var(--page-pad); }
+
+/* The canvas draws every section break as a 2px rule at full container width. */
+.rule { height: 2px; border: 0; margin: 0; background: var(--color-divider); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 10;
+  background: var(--color-text); color: var(--color-bg);
+  padding: 10px 16px; font-size: 14px;
+}
+.skip-link:focus { left: 0; }
+
+/* Tabular figures for every number the design sets in the heading face. */
+.tnum { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1; }
+
+/* The section eyebrow. Accent-700 rather than the accent itself: the readme
+   caps the accent/ground pair at 3:1, which is not enough for label-size text. */
+.kicker {
+  display: block;
+  font-size: 13px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-accent-700);
+  margin: 0 0 24px;
+}
+.kicker-sm { font-size: 12px; margin-bottom: 16px; }
+
+/* Display type hangs into the margin so the glyph edge, not the sidebearing,
+   lines up with the rules below it. */
+.optical { margin-left: -0.058em; }
+.optical-sm { margin-left: -0.045em; }
+
+/* ── header ────────────────────────────────────────────────────────────── */
+
+.site-nav { padding-inline: var(--page-pad); gap: var(--space-6); }
+.site-nav .nav-brand { letter-spacing: -0.01em; }
+.site-nav .btn { white-space: nowrap; flex: none; }
+
+/* ── hero (artboard 1b, as consumed by the full page 1a) ───────────────── */
+
+.hero { padding: clamp(56px, 6.8vw, 96px) 0 clamp(48px, 5.1vw, 72px); }
+
+.hero-title {
+  font-size: clamp(38px, 5.86vw, 82px);
+  line-height: 1.048;
+  letter-spacing: -0.02em;
+  margin: 0;
+  max-width: 20ch;
+}
+.hero-title span { display: block; }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(32px, 4.6vw, 64px);
+  align-items: start;
+  margin-top: 40px;
+}
+
+.lead { font-size: clamp(16px, 1.29vw, 18px); line-height: 1.67; margin: 0; max-width: 52ch; }
+
+/* ── signup rows ───────────────────────────────────────────────────────── */
+
+.signup {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: stretch;
+  margin-top: 32px;
+}
+.signup .input { flex: 1 1 300px; min-width: min(300px, 100%); max-width: 420px; }
+.signup .btn { flex: none; white-space: nowrap; }
+
+.signup-note {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--color-neutral-700);
+  margin: 14px 0 0;
+}
+
+.signup-status { margin: 14px 0 0; font-size: 13px; line-height: 20px; }
+.signup-status[hidden] { display: none; }
+.signup-status[data-state='error'] { color: var(--color-accent-700); }
+.signup-status[data-state='ok'] { color: var(--color-text); font-weight: 600; }
+
+/* The banner sits on a full accent field, so its controls invert.
+   .btn-ghost alone would give a 4px inline padding meant for a borderless
+   button; this variant keeps the DS metrics but pads for the visible edge. */
+.btn-inverse {
+  color: var(--color-bg);
+  border-color: var(--color-bg);
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+}
+.btn-inverse:hover { background: color-mix(in srgb, #f3f2f2 14%, transparent); }
+.btn-inverse:active { background: color-mix(in srgb, #f3f2f2 24%, transparent); }
+.on-accent :focus-visible { outline-color: var(--color-bg); }
+.on-accent .input { background: var(--color-bg); }
+.on-accent .signup-note,
+.on-accent .signup-status { color: inherit; }
+.on-accent .signup-status[data-state='error'] { color: var(--color-accent-200); }
+
+/* ── the inclusions panel beside the hero ──────────────────────────────── */
+
+.side-panel {
+  border-left: 2px solid var(--color-divider);
+  padding-left: clamp(24px, 2.9vw, 40px);
+}
+.side-panel .kicker { margin-bottom: 20px; }
+
+.checklist { display: flex; flex-direction: column; gap: 14px; font-size: 15px; line-height: 22px; }
+.checklist li { display: flex; gap: 12px; }
+.checklist { list-style: none; margin: 0; padding: 0; }
+.checklist li::before {
+  content: '';
+  width: 10px; height: 10px; flex: none;
+  margin-top: 6px;
+  background: var(--color-accent);
+}
+
+/* ── stats band ────────────────────────────────────────────────────────── */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  justify-content: space-between;
+  gap: 32px;
+  padding: 56px 0;
+}
+.stat-num {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(34px, 3.3vw, 46px);
+  line-height: 1.087;
+  color: var(--color-accent);
+  margin: 0;
+}
+.stat-label {
+  font-size: 13px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--color-neutral-700);
+  margin: 10px 0 0;
+}
+
+/* ── numbered steps ────────────────────────────────────────────────────── */
+
+.steps { padding: clamp(48px, 5.1vw, 72px) 0 24px; }
+.steps .kicker { margin-bottom: 40px; }
+
+.step {
+  display: grid;
+  grid-template-columns: minmax(64px, 100px) minmax(0, 340px) minmax(0, 1fr);
+  gap: 24px 56px;
+  align-items: baseline;
+  padding: 36px 0;
+  border-top: 2px solid var(--color-divider);
+}
+.step:first-of-type { padding-top: 0; border-top: 0; }
+
+.step-num { font-family: var(--font-heading); font-weight: 800; font-size: 15px; line-height: 28px; margin: 0; }
+.step-title { font-size: clamp(22px, 1.86vw, 26px); line-height: 1.154; letter-spacing: -0.01em; margin: 0; }
+.step-body { font-size: 15.5px; line-height: 28px; margin: 0; max-width: 54ch; color: var(--color-neutral-800); }
+.step-body + .match { margin-top: 20px; }
+
+/* the scored-posting example inside step 02 */
+.match {
+  border: 2px solid var(--color-text);
+  background: var(--color-neutral-100);
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  max-width: 620px;
+}
+.match-score {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 52px;
+  line-height: 48px;
+  color: var(--color-accent);
+  margin: 0;
+}
+.match-title { font-size: 17px; line-height: 24px; margin: 0 0 4px; }
+.match-meta { font-size: 13.5px; line-height: 20px; color: var(--color-neutral-700); margin: 0 0 12px; }
+.match-tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+
+/* ── two-column prose sections ─────────────────────────────────────────── */
+
+.duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 4vw, 56px);
+  padding: clamp(48px, 5.1vw, 72px) 0;
+}
+.duo-title { font-size: clamp(24px, 2.15vw, 30px); line-height: 1.133; letter-spacing: -0.015em; margin: 0 0 16px; }
+.duo-body { font-size: 15.5px; line-height: 28px; margin: 0; color: var(--color-neutral-800); max-width: 46ch; }
+.duo > .side-panel { padding-left: clamp(32px, 4vw, 56px); }
+
+.output {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 4vw, 56px);
+  align-items: center;
+  padding: clamp(48px, 4.6vw, 64px) 0 clamp(48px, 5.1vw, 72px);
+}
+.output .duo-title { font-size: clamp(25px, 2.29vw, 32px); }
+
+/* Sample CV artwork: the design's 951:665 crop of a printed page inside the .grayscale wrapper
+   the readme requires. The page is HTML set at a size relative to the slot (cqi units), so it
+   scales with the column; an <img> at the same ratio can replace it. */
+.cv-slot {
+  border: 2px solid var(--color-text);
+  background: var(--color-neutral-200);
+  aspect-ratio: 951 / 665;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  container-type: inline-size;
+}
+.cv-slot img { width: 100%; height: 100%; object-fit: cover; }
+
+.output-figure { margin: 0; }
+.output-figure figcaption {
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-neutral-700);
+}
+
+.cv-page {
+  width: 84%;
+  /* Taller than the slot, so the page runs off the bottom edge like a cropped scan. */
+  min-height: 110%;
+  flex: none;
+  margin-top: 5%;
+  padding: 5% 6% 0;
+  background: #fff;
+  color: #111;
+  box-shadow: var(--shadow-md);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.32cqi;
+  line-height: 1.38;
+  text-align: left;
+}
+.cv-page p { margin: 0; }
+.cv-page .cv-name { font-size: 2.6em; font-weight: 700; text-align: center; letter-spacing: .03em; }
+.cv-page .cv-contact { text-align: center; margin-top: .4em; color: #333; }
+.cv-page .cv-heading {
+  margin-top: 1.1em;
+  padding-bottom: .15em;
+  border-bottom: 1px solid #111;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.cv-page .cv-row { display: flex; justify-content: space-between; gap: 1em; margin-top: .55em; }
+.cv-page .cv-row.cv-sub { margin-top: .05em; font-style: italic; }
+.cv-page ul { margin: .3em 0 0; padding-left: 1.3em; }
+.cv-page li { margin-top: .15em; }
+
+/* ── closing banner + footer ───────────────────────────────────────────── */
+
+.cta { background: var(--color-accent); color: var(--color-bg); }
+.cta-inner { padding: clamp(56px, 5.7vw, 80px) var(--page-pad); }
+.cta-title {
+  font-size: clamp(32px, 4.14vw, 58px);
+  line-height: 1.052;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+.cta-title span { display: block; }
+.cta .signup { margin-top: 40px; }
+
+.site-footer {
+  padding: 32px var(--page-pad);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--color-neutral-700);
+}
+.site-footer p { margin: 0; }
+
+/* ── hero direction B: the live scrape ticker (artboard 1c) ────────────── */
+
+.hero-split {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  min-height: 620px;
+}
+.hero-split > .hero-copy { padding: clamp(48px, 6.3vw, 88px) clamp(20px, 4vw, 56px) clamp(48px, 5.7vw, 80px) var(--page-pad); }
+.hero-split .hero-title { font-size: clamp(36px, 5vw, 70px); line-height: 1.057; max-width: none; }
+.hero-split .hero-title .accent { color: var(--color-accent); }
+.hero-split .lead { margin-top: 32px; max-width: 50ch; }
+
+.ticker {
+  border-left: 2px solid var(--color-divider);
+  background: var(--color-neutral-100);
+  padding: 32px 32px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.ticker-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.ticker-head .kicker { margin: 0; font-size: 12px; }
+.ticker-count { font-family: var(--font-heading); font-weight: 800; font-size: 14px; }
+.ticker-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.ticker-row {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  padding: 13px 0;
+  border-top: 2px solid var(--color-divider);
+}
+.ticker-score { font-family: var(--font-heading); font-weight: 800; font-size: 20px; }
+.ticker-title,
+.ticker-meta { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ticker-title { font-size: 14px; line-height: 19px; font-weight: 600; }
+.ticker-meta { font-size: 12.5px; line-height: 18px; color: var(--color-neutral-700); }
+.ticker-foot { font-size: 12px; line-height: 18px; color: var(--color-neutral-700); margin: auto 0 0; }
+
+/* A row arriving at the top of the feed. Suppressed under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .ticker-row.is-new { animation: ticker-in .42s ease-out both; }
+  @keyframes ticker-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+/* ── hero direction C: the red poster (artboard 1d) ────────────────────── */
+
+.nav-inverse {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-bottom-color: var(--color-bg);
+}
+.nav-inverse .nav-brand,
+.nav-inverse a { color: var(--color-bg); }
+.nav-inverse a:hover { color: var(--color-accent-200); }
+
+.poster {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  padding: clamp(48px, 6.3vw, 88px) var(--page-pad) clamp(48px, 5.1vw, 72px);
+}
+.poster-figure {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(96px, 14.3vw, 200px);
+  line-height: .9;
+  letter-spacing: -0.03em;
+  margin: 0 0 0 -0.06em;
+}
+.poster-title {
+  font-size: clamp(28px, 3.7vw, 52px);
+  line-height: 1.077;
+  letter-spacing: -0.02em;
+  margin: 28px 0 0;
+  max-width: 26ch;
+}
+.poster-title span { display: block; }
+.poster-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 4vw, 56px);
+  align-items: end;
+  margin-top: 48px;
+  border-top: 2px solid var(--color-bg);
+  padding-top: 32px;
+}
+.poster-grid p { font-size: clamp(15px, 1.21vw, 17px); line-height: 28px; margin: 0; max-width: 46ch; }
+.poster-grid .signup { margin-top: 0; }
+
+.poster-facts {
+  padding: 28px var(--page-pad);
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  justify-content: space-between;
+  gap: 24px;
+  font-size: 13px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-neutral-700);
+  list-style: none;
+  margin: 0;
+}
+
+/* ── variant switcher (implementation aid, not part of the mockup) ─────── */
+
+.variants {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 14px var(--page-pad);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: baseline;
+  background: var(--color-text);
+  color: var(--color-neutral-300);
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.variants a { color: var(--color-neutral-300); text-decoration: none; }
+.variants a:hover { color: var(--color-bg); }
+.variants a[aria-current='page'] { color: var(--color-accent-400); }
+
+/* ── breakpoints ───────────────────────────────────────────────────────── */
+
+@media (max-width: 1080px) {
+  .hero-grid,
+  .hero-split,
+  .duo,
+  .output,
+  .poster-grid { grid-template-columns: minmax(0, 1fr); }
+
+  .output > .cv-slot { order: 2; }
+
+  /* A left rule reads as a column divider only while there are columns;
+     stacked, the same separation is carried by a rule above. */
+  .side-panel,
+  .ticker {
+    border-left: 0;
+    border-top: 2px solid var(--color-divider);
+    padding-left: 0;
+    padding-top: 32px;
+  }
+  .duo > .side-panel { padding-left: 0; }
+  .ticker { padding-inline: var(--page-pad); padding-bottom: 32px; }
+  .hero-split { min-height: 0; }
+  .hero-split > .hero-copy { padding-inline: var(--page-pad); }
+  .poster-grid { align-items: start; }
+
+  .step { grid-template-columns: 72px minmax(0, 1fr); gap: 12px 24px; }
+  .step-title { grid-column: 2; }
+  .step-content { grid-column: 2; }
+}
+
+@media (max-width: 760px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; gap: 32px 24px; }
+  .poster-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; }
+
+  /* Nav links fold away; the brand and the primary action stay. */
+  .site-nav .nav-link { display: none; }
+
+  .match { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 16px 18px; }
+  .match-score { font-size: 42px; line-height: 42px; }
+
+  .signup .input { max-width: none; }
+  .signup .btn { width: 100%; justify-content: flex-start; }
+}
+
+@media (max-width: 480px) {
+  .stats { grid-template-columns: minmax(0, 1fr); }
+  .poster-facts { grid-template-columns: minmax(0, 1fr); }
+  .step { grid-template-columns: minmax(0, 1fr); }
+  .step-title,
+  .step-content { grid-column: 1; }
+}
+
+/* ── print ─────────────────────────────────────────────────────────────── */
+
+@media print {
+  body { background: #fff; }
+  .variants, .site-nav .btn, .signup { display: none; }
+  .page { max-width: none; }
+}
+
+/* numbered-step list reset — the step grid does the layout */
+.steps-list { list-style: none; margin: 0; padding: 0; }
+
+/* ── fixes and additions (Oct 2026) ────────────────────────────────────── */
+
+/* Modernist's `.nav a` (0,1,1) and `.nav a:hover` (0,2,1) out-rank `.btn-primary`, which left the
+   nav button with ink text at rest and red-on-red text on hover. */
+.site-nav .btn-primary,
+.site-nav .btn-primary:hover,
+.site-nav .btn-primary:active { color: var(--color-bg); }
+
+/* Honeypot field: off-screen for people, filled in by most form bots. */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Small links sit on the ground at body size, where the accent fails 4.5:1; use ink instead. */
+.signup-note a,
+.site-footer a { color: var(--color-text); }
+.on-accent .signup-note a { color: inherit; }
+
+/* ── privacy and 404 pages ─────────────────────────────────────────────── */
+
+.prose { padding: clamp(48px, 6vw, 88px) 0 clamp(48px, 5vw, 72px); max-width: 68ch; }
+.prose h1 { font-size: clamp(34px, 4.4vw, 56px); line-height: 1.06; letter-spacing: -0.02em; margin: 0 0 28px; }
+.prose h2 { font-size: 20px; line-height: 1.3; margin: 32px 0 8px; }
+.prose p,
+.prose li { font-size: 15.5px; line-height: 28px; color: var(--color-neutral-800); }
+.prose ul { padding-left: 20px; margin: 0 0 12px; }
+.prose a { color: var(--color-text); }
+.prose .meta { font-size: 13px; color: var(--color-neutral-700); }
+.cv-page .cv-skills { margin-top: .35em; }

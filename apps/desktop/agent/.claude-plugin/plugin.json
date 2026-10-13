@@ -1,0 +1,6 @@
+{
+  "name": "resumeapplyr",
+  "description": "Skills and workers the resumeapplyr desktop app gives Claude Code or Codex: search job boards, score postings, tailor CVs and apply, all through the app's local API.",
+  "version": "0.1.0",
+  "author": { "name": "resumeapplyr" }
+}
