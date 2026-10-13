@@ -1,0 +1,6 @@
+{
+  "configOverrides": [
+    "sandbox_workspace_write.network_access=true",
+    "windows.sandbox=\"unelevated\""
+  ]
+}
